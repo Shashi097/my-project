@@ -1,0 +1,30 @@
+FROM node:18-slim
+
+RUN apt-get update && \
+    apt-get install -y --no install-recommends curl tinni &&
+
+WORKDIR /usr/local/app
+
+RUN npm install -g  nodemon
+
+COPY package*.json ./
+
+RUN npm ci && \
+    npm cache clean --force && \
+    mv usr/local/app/node-modules /node-modules
+
+COPY . .
+
+ENV PORT 80 
+EXPOSE PORT 80
+
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["node","server.js"]
+
+
+
+
+    
+    
+
+
